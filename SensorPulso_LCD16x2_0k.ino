@@ -58,16 +58,16 @@ void setup(){
 }
   
 void loop(){
-  while(cont <= 1250){
+  while(cont <= 1250){//gets some iterations so that the BPM can be averaged
   cont++;
    if(Serial.available() < 0){
     if(n == 0){
-      Serial.println("LABEL,BPM");
+      Serial.println("LABEL,BPM");//the first serial message is the header
     }
     else{
      int i;
      i = 0;
-     while(i != n){
+     while(i != n){//sends every BPM saved on EEPROM to serial
       EEPROM.get(i, bPM);
       Serial.println(bPM);
       i++;
@@ -76,24 +76,24 @@ void loop(){
    }
   
     
-   int pulso = analogRead(A6);           //Lee el valor del pulsometro conectado al puerto Analogo A0
-   if (BPM > 100 || BPM < 60) {                   // Enciende led 13 cuando el pulso pasa de un valor (debe ajustarse)
+   int pulso = analogRead(A6);           //reads the value of pulsemeter on A0
+   if (BPM > 100 || BPM < 60) {          // turns on led 13 when the pulse is out of the ordinary
       digitalWrite(2, HIGH);
    }  
    else{
       digitalWrite(2, LOW);
    }
-   if(cont == 1250){
+   if(cont == 1250){//only saves the BPM on EEPROM and prints on OLED on the last iteration
     n++;
     //Serial.print("BPM: ");
     //Serial.print(BPM);
     //Serial.print("\n");
-    EEPROM.put(0, n);
-    EEPROM.put(n, BPM);
+    EEPROM.put(0, n);//updates the value of n
+    EEPROM.put(n, BPM);//saves the BPM on the n position
     //OLED Print
      u8g.firstPage();
     do {
-      draw(BPM);
+      draw(BPM);//prints the BPM on the OLED screen
     } while( u8g.nextPage() );
     // rebuild the picture after some delay
     delay(500);
@@ -102,6 +102,6 @@ void loop(){
       QS = false;                          // Reset a la bandera del Quantified Self 
     }
   }
-  delay(2500);
+  delay(2500);//delay to save memory
   cont = 0;
 }
